@@ -1,0 +1,22 @@
+# The catch-all route is first, so the header-specific rule is unreachable.
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: payment-api
+  namespace: payments
+spec:
+  hosts: ["*"]
+  gateways: [payment-gateway]
+  http:
+    - route:
+        - destination:
+            host: payment-api
+            subset: v1
+    - match:
+        - headers:
+            x-release:
+              exact: v2
+      route:
+        - destination:
+            host: payment-api
+            subset: v2

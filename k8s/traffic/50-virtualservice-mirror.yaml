@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: payment-api
+  namespace: payments
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - payment-gateway
+  http:
+    - route:
+        - destination:
+            host: payment-api
+            subset: v1
+            port:
+              number: 8080
+          weight: 100
+      mirror:
+        host: payment-api
+        subset: v2
+        port:
+          number: 8080
+      mirrorPercentage:
+        value: 100

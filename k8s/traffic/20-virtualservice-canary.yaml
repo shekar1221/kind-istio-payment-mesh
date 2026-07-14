@@ -1,0 +1,29 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: payment-api
+  namespace: payments
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - payment-gateway
+  http:
+    - retries:
+        attempts: 2
+        perTryTimeout: 1s
+        retryOn: 5xx,connect-failure,reset
+      timeout: 3s
+      route:
+        - destination:
+            host: payment-api
+            subset: v1
+            port:
+              number: 8080
+          weight: 80
+        - destination:
+            host: payment-api
+            subset: v2
+            port:
+              number: 8080
+          weight: 20

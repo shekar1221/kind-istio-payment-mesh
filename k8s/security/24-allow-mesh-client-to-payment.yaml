@@ -1,0 +1,19 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-mesh-client-to-payment
+  namespace: payments
+spec:
+  selector:
+    matchLabels:
+      app: payment-api
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/payments/sa/mesh-client
+      to:
+        - operation:
+            methods: ["GET"]
+            paths: ["/pay*"]

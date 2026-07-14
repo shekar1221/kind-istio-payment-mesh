@@ -1,0 +1,19 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-payment-to-risk
+  namespace: payments
+spec:
+  selector:
+    matchLabels:
+      app: risk-api
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/payments/sa/payment-api
+      to:
+        - operation:
+            methods: ["GET"]
+            paths: ["/risk*", "/healthz", "/readyz"]

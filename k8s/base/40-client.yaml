@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mesh-client
+  namespace: payments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mesh-client
+  template:
+    metadata:
+      labels:
+        app: mesh-client
+    spec:
+      serviceAccountName: mesh-client
+      containers:
+        - name: curl
+          image: curlimages/curl:8.13.0
+          command: ["sh", "-c", "sleep infinity"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]

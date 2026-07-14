@@ -1,0 +1,21 @@
+# This namespace has no sidecar injection. With STRICT mTLS, direct calls to payments fail.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: legacy-client
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: legacy-curl
+  namespace: legacy-client
+spec:
+  containers:
+    - name: curl
+      image: curlimages/curl:8.13.0
+      command: ["sh", "-c", "sleep infinity"]
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        capabilities:
+          drop: ["ALL"]

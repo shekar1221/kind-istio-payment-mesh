@@ -1,0 +1,16 @@
+# Applying this replaces the working DestinationRule with a subset that matches no pod.
+# Expected symptom: ingress returns HTTP 503 / no healthy upstream.
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: payment-api
+  namespace: payments
+spec:
+  host: payment-api.payments.svc.cluster.local
+  subsets:
+    - name: v1
+      labels:
+        version: production-v1-does-not-exist
+    - name: v2
+      labels:
+        version: v2
