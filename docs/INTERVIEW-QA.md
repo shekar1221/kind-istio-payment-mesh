@@ -119,3 +119,20 @@ I keep v1 and v2 running, change only the VirtualService weights, and watch erro
 ## 30. How do you explain this project in two minutes?
 
 I created a three-node Kind cluster and installed Istio in sidecar mode. I deployed a payment API with v1/v2 plus risk and ledger dependencies. I used Gateway, VirtualService and DestinationRule for baseline, canary, header routing, faults and mirroring. I enforced STRICT mTLS and service-account-based default-deny authorization. I added Prometheus, Grafana, Kiali and Jaeger, propagated trace headers, and built troubleshooting cases for empty subsets, route ordering, RBAC denial and plaintext clients.
+
+
+# Related Kubernetes lifecycle questions
+
+## 31. What is a Kubernetes finalizer?
+
+A finalizer is a qualified key in object metadata that blocks final API deletion until its owning controller completes cleanup and removes that key. Kubernetes sets `deletionTimestamp`; it does not execute the finalizer itself.
+
+## 32. How does the finalizers lab complement the Istio lab?
+
+Istio demonstrates runtime traffic, identity and telemetry. The finalizers module demonstrates Kubernetes API lifecycle and controller reconciliation. The custom `PaymentCleanup` controller archives simulated payment evidence before allowing resource deletion.
+
+## 33. Finalizer versus Istio proxy drain?
+
+Proxy drain helps Envoy finish active network requests during pod termination. A finalizer controls deletion of an API object and can coordinate external cleanup. They solve different problems and can both participate in a production shutdown workflow.
+
+For the complete finalizers set, see `docs/FINALIZERS-INTERVIEW-QA.md`.

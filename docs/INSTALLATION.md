@@ -96,3 +96,21 @@ kubectl apply -f k8s/traffic/10-virtualservice-baseline.yaml
 kubectl port-forward -n istio-system service/istio-ingressgateway 8080:80
 ```
 
+
+
+## Optional: install the Kubernetes finalizers lab
+
+After the namespace and base application are deployed:
+
+```bash
+./scripts/11-deploy-finalizer-lab.sh
+./scripts/12-demo-finalizer.sh
+```
+
+To reproduce a safely controlled stuck-deletion scenario:
+
+```bash
+./scripts/13-demo-stuck-finalizer.sh
+```
+
+See `docs/FINALIZERS-LAB.md` before manually removing any finalizer.

@@ -57,3 +57,34 @@ kubectl get peerauthentication,authorizationpolicy -n payments -o yaml
 ```bash
 kubectl apply -f k8s/traffic/10-virtualservice-baseline.yaml
 ```
+
+
+# Finalizers and deletion lifecycle
+
+```bash
+# List objects with finalizers
+kubectl get paymentcleanups -n payments -o custom-columns='NAME:.metadata.name,DELETING:.metadata.deletionTimestamp,FINALIZERS:.metadata.finalizers'
+
+# Inspect a resource
+kubectl get paymentcleanup txn-2026-0001 -n payments -o yaml
+kubectl describe paymentcleanup txn-2026-0001 -n payments
+
+# Controller health and logs
+kubectl get deploy,pod -n payments -l app.kubernetes.io/name=payment-finalizer-controller
+kubectl logs -n payments deploy/payment-finalizer-controller -f
+
+# Validate controller RBAC
+kubectl auth can-i patch paymentcleanups.payments.example.com \
+  --as=system:serviceaccount:payments:payment-finalizer-controller -n payments
+
+# Delete while keeping the shell non-blocking
+kubectl delete paymentcleanup txn-2026-0001 -n payments --wait=false
+
+# Run the normal and stuck demos
+./scripts/12-demo-finalizer.sh
+./scripts/13-demo-stuck-finalizer.sh
+
+# Targeted recovery after external cleanup is verified
+./scripts/14-resolve-stuck-finalizer.sh \
+  paymentcleanup txn-stuck-demo payments interview.demo/manual-cleanup
+```

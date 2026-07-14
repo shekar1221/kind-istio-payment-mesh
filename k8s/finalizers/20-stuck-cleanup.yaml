@@ -1,0 +1,11 @@
+apiVersion: payments.example.com/v1alpha1
+kind: PaymentCleanup
+metadata:
+  name: txn-stuck-demo
+  namespace: payments
+  finalizers:
+    - interview.demo/manual-cleanup
+spec:
+  transactionId: TXN-STUCK-001
+  archivePath: external://manual-reconciliation/TXN-STUCK-001
+  requestedBy: interview-demo

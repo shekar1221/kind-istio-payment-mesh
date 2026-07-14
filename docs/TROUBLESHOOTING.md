@@ -116,3 +116,26 @@ Typical causes: host mismatch, gateway reference mismatch, wrong URI match, or r
 ```bash
 ./scripts/09-diagnose.sh
 ```
+
+
+# Scenario: custom resource stuck in Terminating
+
+## Symptom
+
+`kubectl delete` was accepted, but the object remains and has a `deletionTimestamp`.
+
+## Diagnosis
+
+```bash
+kubectl get paymentcleanup txn-stuck-demo -n payments -o yaml
+kubectl get events -n payments --sort-by=.lastTimestamp
+kubectl logs -n payments deploy/payment-finalizer-controller --tail=200
+kubectl auth can-i patch paymentcleanups.payments.example.com \
+  --as=system:serviceaccount:payments:payment-finalizer-controller -n payments
+```
+
+Check the exact finalizer key and find the owning controller. Confirm controller health, RBAC, external API connectivity, credentials and whether cleanup is idempotent.
+
+## Safe resolution
+
+Restore the responsible controller and let it reconcile whenever possible. If the finalizer is proven stale and external cleanup is independently complete, remove only that key with `scripts/14-resolve-stuck-finalizer.sh`. Do not blindly patch every finalizer to an empty list because this can orphan infrastructure or audit work.

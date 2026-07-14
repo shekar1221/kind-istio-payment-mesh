@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: payment-finalizer-controller
+  namespace: payments
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: payment-finalizer-controller
+  namespace: payments
+rules:
+  - apiGroups: ["payments.example.com"]
+    resources: ["paymentcleanups"]
+    verbs: ["get", "list", "watch", "patch", "update"]
+  - apiGroups: ["payments.example.com"]
+    resources: ["paymentcleanups/status"]
+    verbs: ["get", "patch", "update"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "create", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: payment-finalizer-controller
+  namespace: payments
+subjects:
+  - kind: ServiceAccount
+    name: payment-finalizer-controller
+    namespace: payments
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: payment-finalizer-controller

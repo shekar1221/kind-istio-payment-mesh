@@ -1,0 +1,9 @@
+apiVersion: payments.example.com/v1alpha1
+kind: PaymentCleanup
+metadata:
+  name: txn-2026-0001
+  namespace: payments
+spec:
+  transactionId: TXN-2026-0001
+  archivePath: s3://payment-audit-demo/2026/txn-2026-0001.json
+  requestedBy: sre-team

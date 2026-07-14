@@ -15,3 +15,12 @@ This project was prepared against official documentation current on 14 July 2026
 - Kind: https://kind.sigs.k8s.io/
 - Kubernetes Services: https://kubernetes.io/docs/concepts/services-networking/service/
 - Kubernetes Service Accounts: https://kubernetes.io/docs/concepts/security/service-accounts/
+
+
+## Kubernetes finalizers and custom resources
+
+- Kubernetes finalizers: https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/
+- Using finalizers to control deletion: https://kubernetes.io/blog/2021/05/14/using-finalizers-to-control-deletion/
+- Garbage collection: https://kubernetes.io/docs/concepts/architecture/garbage-collection/
+- Custom resources: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
+- CustomResourceDefinitions: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/

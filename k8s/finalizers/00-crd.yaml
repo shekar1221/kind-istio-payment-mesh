@@ -1,0 +1,55 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: paymentcleanups.payments.example.com
+spec:
+  group: payments.example.com
+  scope: Namespaced
+  names:
+    plural: paymentcleanups
+    singular: paymentcleanup
+    kind: PaymentCleanup
+    shortNames:
+      - pcl
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Transaction
+          type: string
+          jsonPath: .spec.transactionId
+        - name: Phase
+          type: string
+          jsonPath: .status.phase
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required:
+                - transactionId
+              properties:
+                transactionId:
+                  type: string
+                  minLength: 1
+                archivePath:
+                  type: string
+                requestedBy:
+                  type: string
+            status:
+              type: object
+              properties:
+                phase:
+                  type: string
+                message:
+                  type: string
+                observedGeneration:
+                  type: integer
+                  format: int64
